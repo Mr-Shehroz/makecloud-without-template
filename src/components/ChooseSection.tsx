@@ -1,4 +1,6 @@
-"use client"
+// components/ChooseSection.tsx
+'use client'
+
 import { useState, useEffect } from 'react'
 import {
   Carousel,
@@ -9,38 +11,22 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel"
 import Image from 'next/image'
+import { getFileUrl } from '@/sanity/lib/client'
+import type { ChooseData } from '@/types/choose'
 
-const ChooseSection = () => {
+interface ChooseSectionProps {
+  chooseData: ChooseData | null
+}
+
+const ChooseSection = ({ chooseData }: ChooseSectionProps) => {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
   const [isInteracting, setIsInteracting] = useState(false)
 
-  const carouselData = [
-    {
-      image: "/choose-1.png",
-      icon: "/choose-icon-1.svg",
-      title: "CLOUD MIGRATION & OPTIMISATION",
-      description: "IAM encryption, monitoring and governance are implemented early to keep your cloud environment secure and audit-ready."
-    },
-    {
-      image: "/choose-2.png",
-      icon: "/choose-icon-2.svg",
-      title: "PERFORMANCE & SCALABILITY",
-      description: "Optimize your infrastructure for peak performance with auto-scaling capabilities and load balancing."
-    },
-    {
-      image: "/choose-3.png",
-      icon: "/choose-icon-1.svg",
-      title: "COST OPTIMIZATION",
-      description: "Reduce cloud spending with intelligent resource allocation and automated cost management tools."
-    },
-    {
-      image: "/choose-1.png",
-      icon: "/choose-icon-2.svg",
-      title: "SECURITY & COMPLIANCE",
-      description: "Enterprise-grade security measures with compliance standards including SOC2, HIPAA, and GDPR."
-    }
-  ]
+  if (!chooseData) return null
+
+  const { heading, carouselItems = [], carouselSettings } = chooseData
+  const { autoplayInterval = 4000, enableAutoplay = true, enableLoop = true } = carouselSettings
 
   useEffect(() => {
     if (!api) return
@@ -56,23 +42,23 @@ const ChooseSection = () => {
 
   // Autoplay effect
   useEffect(() => {
-    if (!api) return
+    if (!api || !enableAutoplay) return
 
     const autoplay = setInterval(() => {
       if (!isInteracting) {
         api.scrollNext()
       }
-    }, 4000) // Change slide every 4 seconds for smoother experience
+    }, autoplayInterval)
 
     return () => clearInterval(autoplay)
-  }, [api, isInteracting])
+  }, [api, isInteracting, enableAutoplay, autoplayInterval])
 
   return (
     <section className='md:py-[12vh] py-[8vh]'>
       <div>
         <div className='w-full max-w-[689px] mx-auto mb-[4.3vh]'>
           <h2 className='font-normal font-archivo-black text-center'>
-            Why Companies Choose Make Cloud
+            {heading}
           </h2>
         </div>
         
@@ -81,7 +67,7 @@ const ChooseSection = () => {
             setApi={setApi}
             opts={{
               align: "center",
-              loop: true,
+              loop: enableLoop,
               duration: 25,
               dragFree: false,
               skipSnaps: false,
@@ -97,12 +83,12 @@ const ChooseSection = () => {
               onTouchEnd={() => setTimeout(() => setIsInteracting(false), 3000)}
             >
               <CarouselContent className="flex items-center h-full">
-                {carouselData.map((item, index) => {
+                {carouselItems.map((item, index) => {
                   const isCenter = index === current
                   
                   return (
                     <CarouselItem 
-                      key={index} 
+                      key={item._key || index} 
                       className="basis-auto flex justify-center overflow-visible h-full items-center"
                     >
                       <div 
@@ -115,7 +101,7 @@ const ChooseSection = () => {
                         {/* Background Image */}
                         <div 
                           className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-in-out"
-                          style={{ backgroundImage: `url(${item.image})` }}
+                          style={{ backgroundImage: `url(${getFileUrl(item.backgroundImage)})` }}
                         />
                         
                         {/* Content - Only visible when centered */}
@@ -125,7 +111,14 @@ const ChooseSection = () => {
                               <div className="flex items-start lg:gap-4 gap-2">
                                 {/* Icon */}
                                 <div className="flex-shrink-0 xl:w-[70px] xl:h-[70px] lg:h-[50px] lg:w-[50px] w-[40px] h-[40px] bg-[#E53023] rounded-full flex items-center justify-center text-white">
-                                  <Image src={item.icon} height={45} width={45} alt="icon" className='xl:w-[45px] lg:w-[35px] w-[25px] h-auto' unoptimized />
+                                  <Image 
+                                    src={getFileUrl(item.icon)} 
+                                    height={45} 
+                                    width={45} 
+                                    alt="icon" 
+                                    className='xl:w-[45px] lg:w-[35px] w-[25px] h-auto' 
+                                    unoptimized 
+                                  />
                                 </div>
                                 
                                 {/* Text Content */}
@@ -155,7 +148,7 @@ const ChooseSection = () => {
           
           {/* Dots Indicator */}
           <div className="flex justify-center gap-2 mt-[2.5vh] overflow-visible"> 
-            {carouselData.map((_, index) => ( 
+            {carouselItems.map((_, index) => ( 
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}

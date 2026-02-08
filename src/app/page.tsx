@@ -1,31 +1,31 @@
-import BlogsSection from "@/components/BlogsSection";
-import Branding from "@/components/branding";
-import ChooseSection from "@/components/ChooseSection";
-import ContactsSection from "@/components/ContactsSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import FooterSection from "@/components/FooterSection";
-import Header from "@/components/header";
-import HeroSection from "@/components/HeroSection";
-import Marquee from "@/components/marquee";
-import PartnersSection from "@/components/PartnersSection";
-import ServicesSection from "@/components/ServicesSection";
-import TrustedSection from "@/components/TrustedSection";
+import BlogsSectionContainer from "@/components/BlogsSectionContainer"
+import BrandingContainer from "@/components/BrandingContainer"
+import ChooseSectionContainer from "@/components/ChooseSectionContainer"
+import ContactsSectionContainer from "@/components/ContactsSectionContainer"
+import FeaturesSectionContainer from "@/components/FeaturesSectionContainer"
+import FooterSectionContainer from "@/components/FooterSectionContainer"
+import HeaderContainer from "@/components/HeaderContainer"
+import HeroSectionContainer from "@/components/HeroSectionContainer"
+import MarqueeContainer from "@/components/MarqueeContainer"
+import PartnersSectionContainer from "@/components/PartnersSectionContainer"
+import ServicesSectionContainer from "@/components/ServicesSectionContainer"
+import TrustedSectionContainer from "@/components/TrustedSectionContainer"
 
 export default function Home() {
   return (
     <div>
-      <Branding />
-      <Header />
-      <HeroSection />
-      <ServicesSection />
-      <PartnersSection />
-      <ChooseSection />
-      <Marquee />
-      <FeaturesSection />
-      <TrustedSection />
-      <BlogsSection />
-      <ContactsSection />
-      <FooterSection />
+      <BrandingContainer />
+      <HeaderContainer/>
+      <HeroSectionContainer />
+      <ServicesSectionContainer />
+      <PartnersSectionContainer />
+      <ChooseSectionContainer />
+      <MarqueeContainer />
+      <FeaturesSectionContainer />
+      <TrustedSectionContainer />
+      <BlogsSectionContainer />
+      <ContactsSectionContainer />
+      <FooterSectionContainer />
     </div>
-  );
+  )
 }
